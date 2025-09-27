@@ -1,4 +1,4 @@
-// frontend/js/menu.js - Initial frontend development
+// Initial frontend development
 
 let menuData = [];
 let currentFilter = 'all';
