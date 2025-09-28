@@ -58,8 +58,7 @@
   color: #2c3e50;
   border: 2px solid #bdc3c7;
 }
-
-.btn:hover {
+* .btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
