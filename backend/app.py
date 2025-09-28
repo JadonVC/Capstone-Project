@@ -79,3 +79,4 @@ if __name__ == '__main__':
     print("Available at: http://localhost:5000")
     print("Menu endpoint: http://localhost:5000/api/menu")
     app.run(debug=True, host='localhost', port=5000)
+     

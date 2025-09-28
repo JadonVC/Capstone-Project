@@ -55,3 +55,4 @@ def get_all_payments():
     cursor.close()
     connect.close()
     return rows
+ 
