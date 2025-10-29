@@ -9,11 +9,10 @@
       "previewLimit": 50,
       "server": "localhost",
       "port": 3306,
-      "driver": "MariaDB",
+      "driver": "MySQL",
       "name": "Restaurant Database",
-      "database": "mysql",
-      "username": "root",
-      "askForPassword": true
+      "database": "MySQL",
+      "username": "root"
     }
   ]
 }

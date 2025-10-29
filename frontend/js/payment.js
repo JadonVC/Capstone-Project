@@ -2,6 +2,8 @@ async function submitPayment() {
   const orderId = document.getElementById("orderId").value;
   const cardNumber = document.getElementById("cardNumber").value;
   const amount = document.getElementById("amount").value;
+  const expiry = document.getElementById("expiry").value;
+  const cvc = document.getElementById("cvc").value;
 
   const payload = {
     order_id: orderId,
@@ -21,20 +23,12 @@ async function submitPayment() {
     const result = await response.json();
 
     if (result.status === "success") {
-      document.getElementById(
-        "result"
-      ).innerHTML = `<p style="color:green;">${result.message}<br>
-        Transaction ID: ${result.transaction_id}<br>
-        Amount: $${result.amount}</p>`;
+      window.location.href = "success.html";
     } else {
-      document.getElementById(
-        "result"
-      ).innerHTML = `<p style="color:red;">${result.message}</p>`;
+      window.location.href = "failure.html";
     }
   } catch (err) {
     console.error("Payment error:", err);
-    document.getElementById(
-      "result"
-    ).innerHTML = `<p style="color:red;">Error connecting to payment system</p>`;
+    window.location.href = "failure.html";
   }
 }

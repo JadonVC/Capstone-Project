@@ -31,8 +31,11 @@ def create_payment_table():
 
 def insert_payment(order_id, status, amount):
 
-    connect = get_connection
+    connect = get_connection()
     cursor = connect.cursor()
+
+    transaction_id = str(uuid.uuid4())
+
     try:
         cursor.execute("""
         INSERT INTO payments (order_id, transaction_id, status, amount)
@@ -44,6 +47,7 @@ def insert_payment(order_id, status, amount):
         cursor.close()
         connect.close()
 
+    return transaction_id
 
 
 def get_all_payments():

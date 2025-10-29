@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <h1>Checkout</h1>
+    <p>Order ID: <span id="orderId"></span></p>
+    <p>Total Amount: $<span id="amount"></span></p>
+
+    <form onsubmit="submitPayment(); return false;">
+      <label for="cardNumber">Card Number:</label>
+      <input
+        type="text"
+        id="cardNumber"
+        placeholder="1234 5678 9012 3456"
+        required
+      />
+      <label for="Expiry">Expiry (MM/YY):</label>
+      <input type="text" id="expiry" placeholder="10/27" required />
+      <label for="cvc">CVC:</label>
+      <input type="text" id="cvc" placeholder="123" required />
+      <br />
+      <button type="submit">Pay Now</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script src="js/payment.js"></script>
+    <script>
+      // Load order details from localStorage
+      document.getElementById("orderId").innerText =
+        localStorage.getItem("orderId");
+      document.getElementById("amount").innerText =
+        localStorage.getItem("orderTotal");
+
+      // Populate hidden input so submitPayment() can use them
+      const hiddenOrderId = document.createElement("input");
+      hiddenOrderId.type = "hidden";
+      hiddenOrderId.id = "orderIdInput";
+      hiddenOrderId.value = localStorage.getItem("orderId");
+
+      const hiddenAmount = document.createElement("input");
+      hiddenAmount.type = "hidden";
+      hiddenAmount.id = "amountInput";
+      hiddenAmount.value = localStorage.getItem("orderTotal");
+
+      document.querySelector("form").append(hiddenOrderId, hiddenAmount);
+    </script>
+  </body>
+</html>
