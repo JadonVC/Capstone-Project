@@ -1,15 +1,11 @@
-// Initial frontend development
+// frontend/js/api.js - API communication helper
 
-// API configuration
-const API_BASE_URL = 'http://localhost:5000/api';
-
-// API functions for communicating with Flask backend
 const API = {
+    BASE_URL: 'http://localhost:5000/api',
     
-    // Get all menu items
-    getMenu: async () => {
+    async getMenu() {
         try {
-            const response = await fetch(`${API_BASE_URL}/menu`);
+            const response = await fetch(`${this.BASE_URL}/menu`);
             
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -17,31 +13,45 @@ const API = {
             
             const data = await response.json();
             return data;
-            
         } catch (error) {
-            console.error('Error fetching menu:', error);
+            console.error('API Error:', error);
             throw error;
         }
     },
     
-    // Get menu items by category
-    getMenuByCategory: async (category) => {
+    async placeOrder(orderData) {
         try {
-            const response = await fetch(`${API_BASE_URL}/menu/${category}`);
+            const response = await fetch(`${this.BASE_URL}/orders`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(orderData)
+            });
             
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             
-            const data = await response.json();
-            return data;
-            
+            return await response.json();
         } catch (error) {
-            console.error(`Error fetching menu for category ${category}:`, error);
+            console.error('API Error:', error);
+            throw error;
+        }
+    },
+    
+    async getOrder(orderId) {
+        try {
+            const response = await fetch(`${this.BASE_URL}/orders/${orderId}`);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            return await response.json();
+        } catch (error) {
+            console.error('API Error:', error);
             throw error;
         }
     }
-    
-    // Additional API functions can be added here as needed
-    // Example: addMenuItem, updateMenuItem, deleteMenuItem for admin features
 };

@@ -1,5 +1,3 @@
-<!-- Initial frontend development -->
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -10,8 +8,16 @@
   </head>
   <body>
     <header class="header">
-      <h1>Our Restaurant Menu</h1>
-      <p>Fresh ingredients, delicious flavors, memorable dining</p>
+        <h1>Our Restaurant Menu</h1>
+        <p>Fresh ingredients, delicious flavors, memorable dining</p>
+        <div class="order-summary-toggle">
+            <button id="orderToggle" class="order-toggle-btn" onclick="toggleOrderSummary()">
+                View Order (<span id="orderCount">0</span> items)
+            </button>
+            <a href="orders.html" style="margin-left: 10px;">
+                <button class="order-toggle-btn">Look Up Order</button>
+            </a>
+        </div>
     </header>
 
     <div class="container">
@@ -25,6 +31,37 @@
       <div id="error" class="error" style="display: none"></div>
 
       <div class="menu-grid" id="menuGrid"></div>
+        <div class="main-content">
+            <div class="menu-section">
+                <div id="loading" class="loading">Loading menu...</div>
+                <div id="error" class="error" style="display: none;"></div>
+                <div class="menu-grid" id="menuGrid"></div>
+            </div>
+
+            <div class="order-section" id="orderSection">
+                <div class="order-summary">
+                    <h3>Your Order</h3>
+                    <div id="orderItems" class="order-items">
+                        <p class="empty-order">No items added yet</p>
+                    </div>
+                    <div class="order-total">
+                        <strong>Total: $<span id="orderTotal">0.00</span></strong>
+                    </div>
+                    
+                    <div class="customer-form" id="customerForm" style="display: none;">
+                        <h4>Customer Information</h4>
+                        <input type="text" id="customerName" placeholder="Your Name" required>
+                        <input type="tel" id="customerPhone" placeholder="Phone Number" required>
+                        <input type="text" id="customerAddress" placeholder="Delivery Address (optional)">
+                        <button class="place-order-btn" onclick="placeOrder()">Place Order</button>
+                    </div>
+                    
+                    <button id="proceedBtn" class="proceed-btn" onclick="showCustomerForm()" style="display: none;">
+                        Proceed to Checkout
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <section class="cart-section">
@@ -34,7 +71,9 @@
     </section>
 
     <script src="js/api.js"></script>
+    <script src="js/cart.js"></script>
     <script src="js/menu.js"></script>
     <script src="js/cart.js"></script>
   </body>
+</body>
 </html>
