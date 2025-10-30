@@ -1,4 +1,4 @@
-/* Initial frontend development */
+/* frontend/css/styles.css - Updated with ordering functionality */
 
 * {
     margin: 0;
@@ -19,6 +19,7 @@ body {
     text-align: center;
     padding: 2rem 0;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: relative;
 }
 
 .header h1 {
@@ -31,10 +32,167 @@ body {
     opacity: 0.9;
 }
 
-.container {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 0 1rem;
+.order-summary-toggle {
+    position: absolute;
+    top: 1rem;
+    right: 2rem;
+}
+
+.order-toggle-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid white;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.order-toggle-btn:hover {
+    background: white;
+    color: #667eea;
+}
+
+.main-content {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.menu-section {
+    min-height: 500px;
+}
+
+.order-section {
+    position: sticky;
+    top: 2rem;
+    height: fit-content;
+}
+
+.order-summary {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border: 2px solid #667eea;
+}
+
+.order-summary h3 {
+    color: #667eea;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.order-items {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.order-item:last-child {
+    border-bottom: none;
+}
+
+.order-item-details {
+    flex: 1;
+}
+
+.order-item-name {
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.order-item-price {
+    color: #666;
+    font-size: 0.8rem;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.qty-btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.qty-btn:hover {
+    background: #5a67d8;
+}
+
+.empty-order {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 2rem 0;
+}
+
+.order-total {
+    text-align: center;
+    font-size: 1.1rem;
+    padding: 1rem 0;
+    border-top: 2px solid #eee;
+    color: #667eea;
+}
+
+.customer-form {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 2px solid #eee;
+}
+
+.customer-form h4 {
+    margin-bottom: 1rem;
+    color: #667eea;
+}
+
+.customer-form input {
+    width: 100%;
+    padding: 0.7rem;
+    margin-bottom: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.customer-form input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.proceed-btn, .place-order-btn {
+    width: 100%;
+    background: #48bb78;
+    color: white;
+    border: none;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.proceed-btn:hover, .place-order-btn:hover {
+    background: #38a169;
 }
 
 .loading {
@@ -136,9 +294,80 @@ body {
     text-transform: capitalize;
 }
 
+.item-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.item-price {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #667eea;
+}
+
+.item-category {
+    background: #edf2f7;
+    color: #4a5568;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    text-transform: capitalize;
+}
+
+.item-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.qty-input {
+    width: 50px;
+    text-align: center;
+    padding: 0.3rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.add-to-order-btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.3s ease;
+    flex: 1;
+}
+
+.add-to-order-btn:hover {
+    background: #5a67d8;
+}
+
 @media (max-width: 768px) {
     .header h1 {
         font-size: 2rem;
+    }
+    
+    .main-content {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .order-section {
+        position: static;
+        order: -1;
     }
     
     .menu-grid {
@@ -149,5 +378,10 @@ body {
     .category-filters {
         flex-direction: column;
         align-items: center;
+    }
+    
+    .order-summary-toggle {
+        position: static;
+        margin-top: 1rem;
     }
 }

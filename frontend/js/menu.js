@@ -1,4 +1,4 @@
-// Initial frontend development
+// frontend/js/menu.js - Updated with ordering functionality
 
 let menuData = [];
 let currentFilter = 'all';
@@ -82,9 +82,103 @@ function displayMenu(items) {
             <div class="item-name">${item.name}</div>
             <div class="item-description">${item.description || 'Delicious menu item'}</div>
             <div class="item-footer">
-                <div class="item-price">$${parseFloat(item.price).toFixed(2)}</div>
+                <div class="item-price">${parseFloat(item.price).toFixed(2)}</div>
                 <div class="item-category">${item.category}</div>
+            </div>
+            <div class="item-controls">
+                <div class="quantity-selector">
+                    <label>Qty:</label>
+                    <input type="number" min="1" max="10" value="1" class="qty-input" id="qty-${item.id}">
+                </div>
+                <button class="add-to-order-btn" onclick="addToOrder(${item.id}, '${item.name}', ${item.price})">
+                    Add to Order
+                </button>
             </div>
         </div>
     `).join('');
+}
+
+function addToOrder(itemId, itemName, itemPrice) {
+    const qtyInput = document.getElementById(`qty-${itemId}`);
+    const quantity = parseInt(qtyInput.value) || 1;
+    
+    // Add to cart using cart.js functions
+    cart.addItem({
+        id: itemId,
+        name: itemName,
+        price: itemPrice,
+        quantity: quantity
+    });
+    
+    // Reset quantity to 1
+    qtyInput.value = 1;
+    
+    // Show feedback
+    const button = event.target;
+    const originalText = button.textContent;
+    button.textContent = 'Added!';
+    button.style.background = '#48bb78';
+    
+    setTimeout(() => {
+        button.textContent = originalText;
+        button.style.background = '#667eea';
+    }, 1000);
+}
+
+function toggleOrderSummary() {
+    const orderSection = document.getElementById('orderSection');
+    const toggleBtn = document.getElementById('orderToggle');
+    
+    if (orderSection.style.display === 'none') {
+        orderSection.style.display = 'block';
+        toggleBtn.textContent = `Hide Order (${cart.getItemCount()} items)`;
+    } else {
+        orderSection.style.display = 'none';
+        toggleBtn.textContent = `View Order (${cart.getItemCount()} items)`;
+    }
+}
+
+function showCustomerForm() {
+    document.getElementById('customerForm').style.display = 'block';
+    document.getElementById('proceedBtn').style.display = 'none';
+}
+
+async function placeOrder() {
+    const name = document.getElementById('customerName').value;
+    const phone = document.getElementById('customerPhone').value;
+    const address = document.getElementById('customerAddress').value;
+    
+    if (!name || !phone) {
+        alert('Please fill in your name and phone number.');
+        return;
+    }
+    
+    const orderData = {
+        customer: {
+            name: name,
+            phone: phone,
+            address: address
+        },
+        items: cart.getItems(),
+        total: cart.getTotal(),
+        timestamp: new Date().toISOString()
+    };
+    
+    try {
+    const response = await API.placeOrder(orderData);
+    
+    if (response.success) {
+        const orderId = response.order_id;
+        alert(`Thank you ${name}! Your order #${orderId} for $${cart.getTotal().toFixed(2)} has been placed. We'll contact you at ${phone} with updates.`);
+        
+        cart.clear();
+        document.getElementById('customerForm').style.display = 'none';
+        document.getElementById('proceedBtn').style.display = 'none';
+    } else {
+        alert('Error placing order: ' + response.error);
+    }
+    } catch (error) {
+    alert('Error placing order: ' + error.message);
+    console.error('Order error:', error);
+    }
 }

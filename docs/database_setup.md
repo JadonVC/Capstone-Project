@@ -16,7 +16,7 @@
 
 2. **Add New Connection:**
    - Click the '+' button next to "SQLTools: Connections (0)"
-   - Select **MySQL/MariaDB** from the driver list
+   - Select **MySQL** from the driver list
 
 3. **Fill in Connection Details:**
    ```
