@@ -11,14 +11,17 @@
 ## Step 2: Set up MySQL Connection
 
 1. **Open SQLTools Panel:**
+
    - Look for the SQLTools icon in the left sidebar (database icon)
    - Click on it to open the SQLTools panel
 
 2. **Add New Connection:**
+
    - Click the '+' button next to "SQLTools: Connections (0)"
    - Select **MySQL** from the driver list
 
 3. **Fill in Connection Details:**
+
    ```
    Connection Name: Restaurant Database
    Connection group: [leave blank]
@@ -31,6 +34,7 @@
    ```
 
 4. **MySQL Driver Options:**
+
    - Authentication Protocol: default
    - SSL: Disabled
    - Over SSH: Disabled
@@ -85,20 +89,22 @@ SELECT * FROM menu_items;
 ## Step 5: Verify Database Setup
 
 You should see results showing:
+
 - Database created successfully
-- Table created successfully  
+- Table created successfully
 - 8 menu items inserted
 - Final SELECT showing all your menu data with IDs 1-8
 
 ## Step 6: Update Backend Configuration
 
 # In backend/app.py, update this section with your MySQL credentials:
+
 DB_CONFIG = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': 'your_mysql_password',  # Change this to your actual password
-    'database': 'restaurant_ordering',
-    'port': 3306
+'host': 'localhost',
+'user': 'root',
+'password': 'your_mysql_password', # Change this to your actual password
+'database': 'restaurant_ordering',
+'port': 3306
 }
 
 ## Step 7: Install Python Dependencies
@@ -113,17 +119,21 @@ pip install flask flask-cors mysql-connector-python
 ## Step 8: Test the Setup
 
 1. **Start the Backend:**
+
    ```bash
    cd backend
    python app.py
    ```
+
    You should see:
+
    ```
    Starting Restaurant Menu API...
    Available at: http://localhost:5000
    ```
 
 2. **Test the API:**
+
    - Open browser and go to: http://localhost:5000/api/menu
    - You should see JSON data with your 8 menu items
 
@@ -136,19 +146,23 @@ pip install flask flask-cors mysql-connector-python
 ## Troubleshooting
 
 **If connection fails:**
+
 - Make sure MySQL is running on your system
 - Verify your username and password are correct
 - Try connecting to MySQL command line first: `mysql -u root -p`
 
 **If database creation fails:**
+
 - Check that you have permission to create databases
 - Make sure you're connected to MySQL server (not a specific database)
 
 **If backend can't connect:**
+
 - Double-check the password in `backend/config.py`
 - Ensure the database name matches exactly: `restaurant_ordering`
 
 **If frontend shows errors:**
+
 - Make sure the Flask backend is running first
 - Check browser console for specific error messages
 - Verify the API endpoint returns data: http://localhost:5000/api/menu
@@ -156,7 +170,7 @@ pip install flask flask-cors mysql-connector-python
 ## Success Checklist
 
 - [ ] SQLTools extensions installed
-- [ ] MySQL connection established  
+- [ ] MySQL connection established
 - [ ] Database `restaurant_ordering` created
 - [ ] Table `menu_items` created with 8 sample items
 - [ ] Backend config updated with correct credentials
