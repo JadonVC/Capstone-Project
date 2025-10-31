@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Rewards</title>
+    <link rel="stylesheet" href="css/rewards.css" />
+  </head>
+  <body>
+    <div class="container">
+      <a href="index.html" class="nav-link">← Back to My Orders</a>
+
+      <div class="rewards-header">
+        <div class="points-label">Your Total Points</div>
+        <div class="points-display" id="totalPoints">
+          <div
+            class="loading-spinner"
+            style="width: 50px; height: 50px; border-width: 5px"
+          ></div>
+        </div>
+        <div class="lifetime-points">
+          Lifetime Points Earned: <strong id="lifetimePoints">0</strong>
+        </div>
+      </div>
+
+      <div id="successMessage" class="success-message"></div>
+
+      <h2>Available Rewards</h2>
+      <div id="rewardsContainer" class="rewards-grid">
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          Loading rewards...
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE = "http://localhost:5000/api";
+      let customerBalance = { total_points: 0, lifetime_points: 0 };
+
+      // Check if user is logged in
+      async function checkAuth() {
+        try {
+          const response = await fetch(`${API_BASE}/session`, {
+            credentials: "include",
+          });
+          const data = await response.json();
+
+          if (!data.logged_in) {
+            window.location.href = "login.html";
+          }
+        } catch (error) {
+          console.error("Auth check failed:", error);
+        }
+      }
+
+      async function loadRewards() {
+        try {
+          // Fetch balance
+          const balanceResponse = await fetch(`${API_BASE}/loyalty/balance`, {
+            credentials: "include",
+          });
+
+          if (!balanceResponse.ok) {
+            throw new Error("Failed to load balance");
+          }
+
+          customerBalance = await balanceResponse.json();
+
+          document.getElementById("totalPoints").textContent =
+            customerBalance.total_points;
+          document.getElementById("lifetimePoints").textContent =
+            customerBalance.lifetime_points;
+
+          // Fetch rewards
+          const rewardsResponse = await fetch(`${API_BASE}/loyalty/rewards`, {
+            credentials: "include",
+          });
+
+          if (!rewardsResponse.ok) {
+            throw new Error("Failed to load rewards");
+          }
+
+          const rewards = await rewardsResponse.json();
+          displayRewards(rewards);
+        } catch (error) {
+          console.error("Error loading rewards:", error);
+          document.getElementById("rewardsContainer").innerHTML = `
+                    <div class="error-message">
+                        <strong>Error loading rewards.</strong><br>
+                        ${error.message}. Please try refreshing the page.
+                    </div>
+                `;
+        }
+      }
+
+      function displayRewards(rewards) {
+        const container = document.getElementById("rewardsContainer");
+
+        if (rewards.length === 0) {
+          container.innerHTML =
+            '<div class="loading">No rewards available at this time.</div>';
+          return;
+        }
+
+        container.innerHTML = rewards
+          .map((reward) => {
+            const canRedeem = reward.can_redeem === 1;
+            const discountText =
+              reward.discount_type === "percentage"
+                ? `${reward.discount_value}% OFF`
+                : `$${parseFloat(reward.discount_value).toFixed(2)} OFF`;
+
+            const pointsNeeded = canRedeem
+              ? 0
+              : reward.points_required - customerBalance.total_points;
+            const buttonText = canRedeem
+              ? "✨ Redeem Now"
+              : `Need ${pointsNeeded} more points`;
+
+            return `
+                    <div class="reward-card ${!canRedeem ? "locked" : ""}">
+                        ${
+                          !canRedeem
+                            ? '<div class="locked-badge">🔒 Locked</div>'
+                            : ""
+                        }
+                        <div class="reward-title">${reward.name}</div>
+                        <div class="reward-discount">${discountText}</div>
+                        <div class="reward-description">${
+                          reward.description || "Save on your next order!"
+                        }</div>
+                        <div class="reward-points">
+                            <span class="points-icon">⭐</span>
+                            <span>${reward.points_required} points</span>
+                        </div>
+                        <button 
+                            class="redeem-btn" 
+                            onclick="redeemReward(${reward.id}, '${
+              reward.name
+            }')"
+                            ${!canRedeem ? "disabled" : ""}
+                        >
+                            ${buttonText}
+                        </button>
+                    </div>
+                `;
+          })
+          .join("");
+      }
+
+      async function redeemReward(rewardId, rewardName) {
+        if (
+          !confirm(
+            `Redeem "${rewardName}"?\n\nThis discount will be applied to your next order at checkout.`
+          )
+        ) {
+          return;
+        }
+
+        try {
+          const response = await fetch(`${API_BASE}/loyalty/redeem`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ reward_id: rewardId }),
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            // Show success message
+            const successMsg = document.getElementById("successMessage");
+            successMsg.textContent = `Reward redeemed successfully! Your discount will be applied at checkout.`;
+            successMsg.style.display = "block";
+
+            // Scroll to top to show message
+            window.scrollTo({ top: 0, behavior: "smooth" });
+
+            // Reload rewards to update points
+            setTimeout(() => {
+              loadRewards();
+              successMsg.style.display = "none";
+            }, 3000);
+          } else {
+            alert("Error: " + result.error);
+          }
+        } catch (error) {
+          console.error("Error redeeming reward:", error);
+          alert("An error occurred. Please try again.");
+        }
+      }
+
+      // Load rewards when page loads
+      window.onload = async function () {
+        await checkAuth();
+        loadRewards();
+      };
+    </script>
+  </body>
+</html>

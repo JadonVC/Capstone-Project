@@ -3,52 +3,238 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Payment</title>
-    <link rel="stylesheet" href="css/styles.css" />
+    <title>Secure Checkout</title>
+    <link rel="stylesheet" href="css/payment.css" />
   </head>
   <body>
-    <h1>Checkout</h1>
-    <p>Order ID: <span id="orderId"></span></p>
-    <p>Total Amount: $<span id="amount"></span></p>
+    <!-- Header matching your site style -->
+    <div class="header">
+      <h1>Secure Checkout</h1>
+      <p>Complete your order securely</p>
+    </div>
 
-    <form onsubmit="submitPayment(); return false;">
-      <label for="cardNumber">Card Number:</label>
-      <input
-        type="text"
-        id="cardNumber"
-        placeholder="1234 5678 9012 3456"
-        required
-      />
-      <label for="Expiry">Expiry (MM/YY):</label>
-      <input type="text" id="expiry" placeholder="10/27" required />
-      <label for="cvc">CVC:</label>
-      <input type="text" id="cvc" placeholder="123" required />
-      <br />
-      <button type="submit">Pay Now</button>
-    </form>
+    <div class="container">
+      <div class="payment-container">
+        <a href="index.html" class="back-link">Back to Menu</a>
 
-    <div id="result"></div>
+        <!-- Order Summary Section -->
+        <div class="order-summary-section">
+          <h3>Order Summary</h3>
+          <div class="order-detail">
+            <span>Order ID:</span>
+            <span id="orderId">-</span>
+          </div>
+          <div class="order-detail">
+            <span>Total Amount:</span>
+            <span id="amount">$0.00</span>
+          </div>
+          <div class="order-summary-items">
+            <h4>Items in Your Cart</h4>
+            <div id="cartItemsList"></div>
+          </div>
+        </div>
+
+        <div id="loyaltySection" class="loyalty-section">
+          <h3>Loyalty Rewards</h3>
+          <div id="loyaltyPoints" class="points-display">
+            <span>Loading your points...</span>
+          </div>
+          <div id="availableRewards"></div>
+          <div
+            id="appliedDiscount"
+            style="display: none"
+            class="applied-discount"
+          >
+            <strong>Discount Applied!</strong>
+            <p id="discountDetails"></p>
+            <button onclick="removeDiscount()">Remove</button>
+          </div>
+        </div>
+
+        <!-- Payment Form -->
+        <div class="payment-form">
+          <h3>Payment Details</h3>
+
+          <form id="paymentForm" onsubmit="submitPayment(); return false;">
+            <label for="cardNumber">Card Number</label>
+            <input
+              type="text"
+              id="cardNumber"
+              placeholder="4242 4242 4242 4242"
+              maxlength="19"
+              required
+            />
+
+            <div class="card-icons">
+              <div class="card-icon">Visa</div>
+              <div class="card-icon">Mastercard</div>
+              <div class="card-icon">Amex</div>
+              <div class="card-icon">Discover</div>
+            </div>
+
+            <div class="input-group">
+              <div>
+                <label for="expiry">Expiry Date</label>
+                <input
+                  type="text"
+                  id="expiry"
+                  placeholder="MM/YY"
+                  maxlength="5"
+                  required
+                />
+              </div>
+
+              <div>
+                <label for="cvc">CVC</label>
+                <input
+                  type="text"
+                  id="cvc"
+                  placeholder="123"
+                  maxlength="4"
+                  required
+                />
+              </div>
+            </div>
+
+            <button type="submit" class="pay-btn" id="payButton">
+              Pay Now
+            </button>
+
+            <div class="security-badge">
+              Your payment information is secure and encrypted
+            </div>
+          </form>
+
+          <div id="result" class="result-message"></div>
+        </div>
+      </div>
+    </div>
 
     <script src="js/payment.js"></script>
     <script>
       // Load order details from localStorage
-      document.getElementById("orderId").innerText =
-        localStorage.getItem("orderId");
-      document.getElementById("amount").innerText =
-        localStorage.getItem("orderTotal");
+      const orderId = localStorage.getItem("orderId");
+      const orderTotal = localStorage.getItem("orderTotal");
+      const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+      const cartItemsList = document.getElementById("cartItemsList");
 
-      // Populate hidden input so submitPayment() can use them
-      const hiddenOrderId = document.createElement("input");
-      hiddenOrderId.type = "hidden";
-      hiddenOrderId.id = "orderIdInput";
-      hiddenOrderId.value = localStorage.getItem("orderId");
+      if (cartItems.length === 0) {
+        cartItemsList.innerHTML = "<p>No items in cart</p>";
+      } else {
+        cartItemsList.innerHTML = cartItems
+          .map(
+            (item) =>
+              `<p>${item.name} x ${item.quantity} - $${(
+                item.price * item.quantity
+              ).toFixed(2)}</p>`
+          )
+          .join("");
+      }
+      document.getElementById("orderId").textContent = orderId || "N/A";
+      document.getElementById("amount").textContent = orderTotal
+        ? `$${orderTotal}`
+        : "$0.00";
 
-      const hiddenAmount = document.createElement("input");
-      hiddenAmount.type = "hidden";
-      hiddenAmount.id = "amountInput";
-      hiddenAmount.value = localStorage.getItem("orderTotal");
+      // Auto-format card number with spaces (groups of 4)
+      document
+        .getElementById("cardNumber")
+        .addEventListener("input", function (e) {
+          let value = e.target.value.replace(/\s/g, "");
+          let formattedValue = value.match(/.{1,4}/g)?.join(" ") || value;
+          e.target.value = formattedValue;
+        });
 
-      document.querySelector("form").append(hiddenOrderId, hiddenAmount);
+      // Auto-format expiry with slash
+      document.getElementById("expiry").addEventListener("input", function (e) {
+        let value = e.target.value.replace(/\D/g, "");
+        if (value.length >= 2) {
+          value = value.slice(0, 2) + "/" + value.slice(2, 4);
+        }
+        e.target.value = value;
+      });
+
+      // Only allow numbers in CVC
+      document.getElementById("cvc").addEventListener("input", function (e) {
+        e.target.value = e.target.value.replace(/\D/g, "");
+      });
+
+      // Enhanced submitPayment function
+      async function submitPayment() {
+        const payButton = document.getElementById("payButton");
+        const resultDiv = document.getElementById("result");
+        const cardNumber = document
+          .getElementById("cardNumber")
+          .value.replace(/\s/g, "");
+        const expiry = document.getElementById("expiry").value;
+        const cvc = document.getElementById("cvc").value;
+
+        // Basic validation
+        if (cardNumber.length < 13 || cardNumber.length > 19) {
+          resultDiv.className = "result-message error";
+          resultDiv.textContent = "Please enter a valid card number";
+          return;
+        }
+
+        if (expiry.length !== 5 || !expiry.includes("/")) {
+          resultDiv.className = "result-message error";
+          resultDiv.textContent = "Please enter expiry in MM/YY format";
+          return;
+        }
+
+        if (cvc.length < 3 || cvc.length > 4) {
+          resultDiv.className = "result-message error";
+          resultDiv.textContent = "Please enter a valid CVC";
+          return;
+        }
+
+        // Add loading state
+        payButton.disabled = true;
+        payButton.classList.add("loading");
+        resultDiv.className = "result-message";
+        resultDiv.style.display = "none";
+
+        try {
+          // Simulate payment processing (replace with your actual API call)
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+
+          // For demo purposes - in production, you'd send to your payment API
+          console.log("Processing payment for order:", orderId);
+          console.log("Amount:", orderTotal);
+
+          // Success response
+          resultDiv.className = "result-message success";
+          window.location.href = "success_page.html";
+          // Clear localStorage
+          setTimeout(() => {
+            localStorage.removeItem("orderId");
+            localStorage.removeItem("orderTotal");
+
+            // Redirect to orders page (or wherever you want)
+            window.location.href = "my-orders.html";
+          }, 2000);
+        } catch (error) {
+          // Error handling
+          resultDiv.className = "result-message error";
+          window.location.href = "failure_page.html";
+          payButton.disabled = false;
+          payButton.classList.remove("loading");
+          payButton.textContent = "Pay Now";
+
+          console.error("Payment error:", error);
+        }
+      }
+
+      // Make submitPayment available globally
+      window.submitPayment = submitPayment;
+
+      // Check if order details exist
+      if (!orderId || !orderTotal) {
+        const resultDiv = document.getElementById("result");
+        resultDiv.className = "result-message error";
+        resultDiv.textContent =
+          "No order found. Please add items to your cart first.";
+        document.getElementById("payButton").disabled = true;
+      }
     </script>
   </body>
 </html>

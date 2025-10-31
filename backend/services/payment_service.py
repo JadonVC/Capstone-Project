@@ -8,7 +8,7 @@ def process_payment(order_id, card_number, amount):
     - Otherwise it should failed
     """
 
-    if card_number and card_number.startswith("8"):
+    if card_number and card_number.startswith("4"):
         status = "success"
         message = "Payment Received"
     else:

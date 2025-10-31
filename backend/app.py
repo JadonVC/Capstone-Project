@@ -1,6 +1,6 @@
 # backend/app.py - Simple Flask app for menu API
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory, session
 from flask_cors import CORS
 from flask import request
 import mysql.connector
@@ -196,10 +196,106 @@ def home():
             '/api/orders/<order_id> - Get order by ID'
         ]
     })
+@app.route('/payment', methods=['GET', 'POST'])
+def payment_page():
+    if request.method == 'GET':
+        # Serve the payment page
+        return send_from_directory('frontend/html', 'payment.html')
+
+    # Handle POST (payment submission)
+    data = request.get_json()
+    order_id = data.get('order_id')
+    card_number = data.get('card_number')
+    amount = data.get('amount')
+
+    if not all([order_id, card_number, amount]):
+        return jsonify({'status': 'error', 'message': 'Missing payment info'}), 400
+
+    if str(card_number).startswith('4'):
+        return jsonify({
+            'status': 'success',
+            'message': 'Payment processed successfully!',
+            'transaction_id': f'TXN-{order_id[-4:] if order_id else "0000"}',
+            'amount': amount
+        })
+    else:
+        return jsonify({
+            'status': 'error',
+            'message': 'Payment failed. Invalid card number.'
+        }), 400
+
+
 
 if __name__ == '__main__':
     print("Starting Restaurant Menu API...")
     print("Available at: http://localhost:5000")
     print("Menu endpoint: http://localhost:5000/api/menu")
     app.run(debug=True, host='localhost', port=5000)
+
+
+def login_required(f):
+    def decorated_function(*args, **kwargs):
+        if 'customer_id' not in session:
+            return jsonify({'error': 'Authentication required'}), 401
+        return f(*args, **kwargs)
+    return decorated_function
+@app.route('/api/loyalty/balance', methods=['GET'])
+@login_required
+def get_loyalty_balance():
+    """Get customer's loyalty points balance"""
+    try:
+        customer_id = session['customer_id']
+        balance = LoyaltyManager.get_balance(customer_id)
+        return jsonify(balance)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/loyalty/rewards', methods=['GET'])
+@login_required
+def get_rewards():
+    """Get available rewards"""
+    try:
+        customer_id = session['customer_id']
+        rewards = LoyaltyManager.get_available_rewards(customer_id)
+        return jsonify(rewards)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/loyalty/redeem', methods=['POST'])
+@login_required
+def redeem_reward():
+    """Redeem a reward"""
+    try:
+        customer_id = session['customer_id']
+        data = request.get_json()
+        reward_id = data.get('reward_id')
+        
+        if not reward_id:
+            return jsonify({'error': 'reward_id required'}), 400
+        
+        discount = LoyaltyManager.redeem_reward(customer_id, reward_id)
+        
+        # Store discount in session for checkout
+        session['pending_discount'] = discount
+        
+        return jsonify({
+            'success': True,
+            'discount': discount
+        })
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/loyalty/history', methods=['GET'])
+@login_required
+def get_loyalty_history():
+    """Get transaction history"""
+    try:
+        customer_id = session['customer_id']
+        limit = request.args.get('limit', 20, type=int)
+        history = LoyaltyManager.get_transaction_history(customer_id, limit)
+        return jsonify(history)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
      

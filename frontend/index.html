@@ -16,6 +16,9 @@
             </button>
             <a href="orders.html" style="margin-left: 10px;">
                 <button class="order-toggle-btn">Look Up Order</button>
+            </button>
+            <a href="rewards.html" style="margin-right: 10px;">
+                <button class="order-toggle-btn">Rewards</button>
             </a>
         </div>
     </header>
@@ -27,15 +30,11 @@
         </button>
       </div>
 
-      <div id="loading" class="loading">Loading menu...</div>
-      <div id="error" class="error" style="display: none"></div>
-
       <div class="menu-grid" id="menuGrid"></div>
         <div class="main-content">
             <div class="menu-section">
                 <div id="loading" class="loading">Loading menu...</div>
                 <div id="error" class="error" style="display: none;"></div>
-                <div class="menu-grid" id="menuGrid"></div>
             </div>
 
             <div class="order-section" id="orderSection">
@@ -64,16 +63,11 @@
         </div>
     </div>
 
-    <section class="cart-section">
-      <h2>Your Cart</h2>
-      <div id="cart"></div>
-      <button onclick="goToCheckout()">Checkout</button>
-    </section>
 
     <script src="js/api.js"></script>
     <script src="js/cart.js"></script>
     <script src="js/menu.js"></script>
-    <script src="js/cart.js"></script>
+    <script src="js/payment.js"></script>
   </body>
 </body>
 </html>
