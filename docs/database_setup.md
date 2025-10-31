@@ -86,6 +86,32 @@ SELECT * FROM menu_items;
    - Press Ctrl+Shift+E to run all queries
    - Or click "Run on active connection" at the top of the file
 
+4. **Setup order and order_items database:**
+   ```sql
+   -- Create order table
+   CREATE TABLE orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_name VARCHAR(255) NOT NULL,
+    customer_phone VARCHAR(20) NOT NULL,
+    customer_address VARCHAR(500),
+    total_amount DECIMAL(10, 2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_phone (customer_phone)
+   );
+   -- Create the order_items table
+   CREATE TABLE order_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    menu_item_id INT NOT NULL,
+    item_name VARCHAR(255) NOT NULL,
+    item_price DECIMAL(10, 2) NOT NULL,
+    quantity INT NOT NULL,
+    subtotal DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+    FOREIGN KEY (menu_item_id) REFERENCES menu_items(id)
+   );
+   ```
+
 ## Step 5: Verify Database Setup
 
 You should see results showing:
