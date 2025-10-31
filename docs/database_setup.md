@@ -88,6 +88,7 @@ SELECT * FROM menu_items;
 
 4. **Setup order and order_items database:**
    ```sql
+   USE restaurant_ordering;
    -- Create order table
    CREATE TABLE orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
