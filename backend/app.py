@@ -2,10 +2,13 @@
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+from routes.auth_routes import auth_bp
 import mysql.connector
 
 app = Flask(__name__)
 CORS(app)  # Allow frontend to connect
+
+app.register_blueprint(auth_bp)
 
 # Database configuration (same as your setup)
 DB_CONFIG = {

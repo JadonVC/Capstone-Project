@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant - Login/Signup</title>
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-wrapper">
+            <!-- Header -->
+            <div class="auth-header">
+                <h1>🍽️ Restaurant Ordering</h1>
+                <p>Sign in or create an account to view your orders</p>
+            </div>
+
+            <!-- Form Container -->
+            <div class="form-container">
+                <!-- Login Form -->
+                <div class="form-section active" id="login-form">
+                    <h2>Sign In</h2>
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label for="login-email">Email Address</label>
+                            <input type="email" id="login-email" name="email" required placeholder="you@example.com">
+                            <span class="error-message" id="login-email-error"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="login-password">Password</label>
+                            <input type="password" id="login-password" name="password" required placeholder="••••••••">
+                            <span class="error-message" id="login-password-error"></span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Sign In</button>
+                        <div class="message" id="login-message"></div>
+                    </form>
+
+                    <div class="form-footer">
+                        <p>Don't have an account? <a href="#signup" onclick="switchForm('signup')">Create one</a></p>
+                    </div>
+                </div>
+
+                <!-- Signup Form -->
+                <div class="form-section" id="signup-form">
+                    <h2>Create Account</h2>
+                    <form id="signupForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="signup-first">First Name</label>
+                                <input type="text" id="signup-first" name="first_name" placeholder="John">
+                            </div>
+                            <div class="form-group">
+                                <label for="signup-last">Last Name</label>
+                                <input type="text" id="signup-last" name="last_name" placeholder="Doe">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="signup-email">Email Address *</label>
+                            <input type="email" id="signup-email" name="email" required placeholder="you@example.com">
+                            <span class="error-message" id="signup-email-error"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="signup-phone">Phone Number</label>
+                            <input type="tel" id="signup-phone" name="phone" placeholder="(555) 123-4567">
+                            <span class="error-message" id="signup-phone-error"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="signup-password">Password *</label>
+                            <input type="password" id="signup-password" name="password" required placeholder="At least 6 characters with a number">
+                            <small>Must be at least 6 characters and contain a number</small>
+                            <span class="error-message" id="signup-password-error"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="signup-confirm">Confirm Password *</label>
+                            <input type="password" id="signup-confirm" name="confirm" required placeholder="Re-enter password">
+                            <span class="error-message" id="signup-confirm-error"></span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Create Account</button>
+                        <div class="message" id="signup-message"></div>
+                    </form>
+
+                    <div class="form-footer">
+                        <p>Already have an account? <a href="#login" onclick="switchForm('login')">Sign in</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Access -->
+            <div class="quick-access">
+                <p>Continue without account:</p>
+                <a href="index.html" class="btn btn-secondary">Browse Menu</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>
