@@ -4,8 +4,8 @@ from mysql.connector import Error
 
 DB_CONFIG = {
     "host": "127.0.0.1",
-    "user": "root",            # change if your teammate uses another user
-    "password": "root",# replace with your MySQL password
+    "user": "root",            
+    "password": "root",
     "database": "restaurant_ordering"
 }
 

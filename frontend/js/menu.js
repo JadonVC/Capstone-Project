@@ -153,6 +153,10 @@ async function placeOrder() {
         return;
     }
     
+    // Get user ID if logged in
+    const user = localStorage.getItem('user');
+    const userId = user ? JSON.parse(user).id : null;
+    
     const orderData = {
         customer: {
             name: name,
@@ -161,24 +165,25 @@ async function placeOrder() {
         },
         items: cart.getItems(),
         total: cart.getTotal(),
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        user_id: userId
     };
     
     try {
-    const response = await API.placeOrder(orderData);
-    
-    if (response.success) {
-        const orderId = response.order_id;
-        alert(`Thank you ${name}! Your order #${orderId} for $${cart.getTotal().toFixed(2)} has been placed. We'll contact you at ${phone} with updates.`);
+        const response = await API.placeOrder(orderData);
         
-        cart.clear();
-        document.getElementById('customerForm').style.display = 'none';
-        document.getElementById('proceedBtn').style.display = 'none';
-    } else {
-        alert('Error placing order: ' + response.error);
-    }
+        if (response.success) {
+            const orderId = response.order_id;
+            alert(`Thank you ${name}! Your order #${orderId} for $${cart.getTotal().toFixed(2)} has been placed. We'll contact you at ${phone} with updates.`);
+            
+            cart.clear();
+            document.getElementById('customerForm').style.display = 'none';
+            document.getElementById('proceedBtn').style.display = 'none';
+        } else {
+            alert('Error placing order: ' + response.error);
+        }
     } catch (error) {
-    alert('Error placing order: ' + error.message);
-    console.error('Order error:', error);
+        alert('Error placing order: ' + error.message);
+        console.error('Order error:', error);
     }
 }

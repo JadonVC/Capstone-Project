@@ -15,5 +15,6 @@
       "username": "root",
       "askForPassword": true
     }
-  ]
+  ],
+  "liveServer.settings.root": "/frontend"
 }

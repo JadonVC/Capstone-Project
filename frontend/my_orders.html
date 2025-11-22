@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders</title>
+    <link rel="stylesheet" href="css/orders_auth.css">
+</head>
+<body>
+    <header class="header">
+        <a href="index.html" class="home-btn"> Home</a>
+        <div class="header-content">
+            <h1> My Orders</h1>
+            <div class="header-actions">
+                <a href="index.html" class="btn btn-secondary">Back to Menu</a>
+                <button id="logoutBtn" class="btn btn-danger">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="user-info">
+            <h2 id="userName">Loading...</h2>
+            <p id="userEmail"></p>
+        </div>
+
+        <div id="loading" class="loading">Loading your orders...</div>
+        <div id="error" class="error" style="display: none;"></div>
+
+        <div id="ordersContainer" class="orders-container" style="display: none;">
+            <div id="ordersList"></div>
+        </div>
+
+        <div id="noOrders" class="no-orders" style="display: none;">
+            <p>You haven't placed any orders yet.</p>
+            <a href="index.html" class="btn btn-primary">Start Ordering</a>
+        </div>
+    </div>
+
+    <script src="js/my_orders.js"></script>
+</body>
+</html>

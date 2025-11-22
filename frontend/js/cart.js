@@ -66,7 +66,7 @@ const cart = {
         const proceedBtn = document.getElementById('proceedBtn');
         
         // Update counter in header
-        orderCount.textContent = this.getItemCount();
+        orderCount.textContent = this.getItemCount() + ' ';
         
         // Update total
         orderTotal.textContent = this.getTotal().toFixed(2);

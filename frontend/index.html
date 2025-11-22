@@ -8,6 +8,7 @@
   </head>
   <body>
     <header class="header">
+        <a href="index.html" class="home-btn"> Home</a>
         <h1>Our Restaurant Menu</h1>
         <p>Fresh ingredients, delicious flavors, memorable dining</p>
         <div class="order-summary-toggle">
@@ -15,10 +16,13 @@
                 Sign In / Sign Up
             </a>
             <button id="orderToggle" class="order-toggle-btn" onclick="toggleOrderSummary()">
-                View Order (<span id="orderCount">0</span> items)
+                View Order (<span id="orderCount">0</span>&nbsp;items)
             </button>
-            <a href="orders.html" style="margin-left: 10px;">
+            <a href="orders.html" style="margin-left: 10px; text-decoration: none;">
                 <button class="order-toggle-btn">Look Up Order</button>
+            </a>
+            <a href="admin_login.html" class="order-toggle-btn" style="text-decoration: none; display: flex; align-items: center;">
+                Admin Portal
             </a>
         </div>
     </header>
@@ -66,5 +70,29 @@
     <script src="js/api.js"></script>
     <script src="js/cart.js"></script>
     <script src="js/menu.js"></script>
+
+    <script>
+        // Check if user is logged in and show My Orders button
+        function checkUserStatus() {
+            const user = localStorage.getItem('user');
+            const loginLink = document.querySelector('a[href="login.html"]');
+            
+            if (user) {
+                // Hide Sign In button
+                loginLink.style.display = 'none';
+                
+                // Add My Orders button
+                const myOrdersBtn = document.createElement('button');
+                myOrdersBtn.className = 'order-toggle-btn';
+                myOrdersBtn.textContent = 'My Orders';
+                myOrdersBtn.onclick = () => window.location.href = 'my_orders.html';
+                
+                // Insert after Sign In button (which is now hidden)
+                loginLink.parentNode.insertBefore(myOrdersBtn, loginLink.nextSibling);
+            }
+        }
+        
+        window.addEventListener('load', checkUserStatus);
+    </script>
 </body>
 </html>
