@@ -190,3 +190,38 @@ def get_all_admins():
     
     except mysql.connector.Error as e:
         return jsonify({'error': str(e)}), 500
+
+@admin_bp.route('/api/admin/delete/<int:admin_id>', methods=['DELETE'])
+def delete_admin(admin_id):
+    """Delete an admin"""
+    connection = get_db_connection()
+    if not connection:
+        return jsonify({'error': 'Database connection failed'}), 500
+    
+    try:
+        cursor = connection.cursor()
+        
+        # Check if admin exists
+        cursor.execute("SELECT id FROM admins WHERE id = %s", (admin_id,))
+        if not cursor.fetchone():
+            cursor.close()
+            connection.close()
+            return jsonify({'error': 'Admin not found'}), 404
+        
+        # Delete the admin
+        cursor.execute("DELETE FROM admins WHERE id = %s", (admin_id,))
+        connection.commit()
+        cursor.close()
+        connection.close()
+        
+        return jsonify({
+            'success': True,
+            'message': 'Admin deleted successfully',
+            'admin_id': admin_id
+        }), 200
+    
+    except mysql.connector.Error as e:
+        connection.rollback()
+        return jsonify({'error': str(e)}), 500
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500

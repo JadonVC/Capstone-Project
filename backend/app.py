@@ -5,20 +5,22 @@ from flask_cors import CORS
 from routes.auth_routes import auth_bp
 from routes.admin_routes import admin_bp
 from routes.order_routes import order_bp
+from routes.menu_routes import menu_bp
 import mysql.connector
 
 app = Flask(__name__)
-CORS(app)  # Allow frontend to connect
+CORS(app)
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(admin_bp)
 app.register_blueprint(order_bp)
+app.register_blueprint(menu_bp)
 
-# Database configuration (same as your setup)
+# Database configuration
 DB_CONFIG = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'root',  # Change to your MySQL password
+    'password': 'root',
     'database': 'restaurant_ordering',
     'port': 3306
 }
@@ -31,6 +33,19 @@ def get_db_connection():
     except mysql.connector.Error as e:
         print(f"Database error: {e}")
         return None
+
+@app.route('/', methods=['GET'])
+def home():
+    """Simple home route"""
+    return jsonify({
+        'message': 'Restaurant Menu API',
+        'endpoints': [
+            '/api/menu - Get all menu items',
+            '/api/menu/<category> - Get items by category',
+            '/api/orders - Create new order (POST)',
+            '/api/orders/<order_id> - Get order by ID'
+        ]
+    })
 
 @app.route('/api/menu', methods=['GET'])
 def get_menu():
@@ -86,7 +101,7 @@ def create_order():
         customer = data['customer']
         items = data['items']
         total = data.get('total', 0)
-        user_id = data.get('user_id')  # Get user_id from frontend
+        user_id = data.get('user_id')
         
         if not customer.get('name') or not customer.get('phone'):
             return jsonify({'error': 'Customer name and phone are required'}), 400
@@ -154,19 +169,6 @@ def get_order(order_id):
     except mysql.connector.Error as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/', methods=['GET'])
-def home():
-    """Simple home route"""
-    return jsonify({
-        'message': 'Restaurant Menu API',
-        'endpoints': [
-            '/api/menu - Get all menu items',
-            '/api/menu/<category> - Get items by category',
-            '/api/orders - Create new order (POST)',
-            '/api/orders/<order_id> - Get order by ID'
-        ]
-    })
-
 @app.route('/api/orders/all', methods=['GET'])
 def get_all_orders():
     """Get all orders"""
@@ -177,11 +179,10 @@ def get_all_orders():
     try:
         cursor = connection.cursor(dictionary=True)
         cursor.execute(
-            "SELECT id, customer_name, customer_phone, customer_address, total_amount, created_at FROM orders ORDER BY created_at DESC"
+            "SELECT id, customer_name, customer_phone, customer_address, total_amount, order_status, created_at FROM orders ORDER BY created_at DESC"
         )
         orders = cursor.fetchall()
         
-        # Get items for each order
         for order in orders:
             cursor.execute(
                 "SELECT item_name, item_price, quantity, subtotal FROM order_items WHERE order_id = %s",
@@ -196,43 +197,9 @@ def get_all_orders():
     
     except mysql.connector.Error as e:
         return jsonify({'error': str(e)}), 500
-    
-@app.route('/api/menu/add', methods=['POST'])
-def add_menu_item():
-    """Add a new menu item"""
-    connection = get_db_connection()
-    if not connection:
-        return jsonify({'error': 'Database connection failed'}), 500
-    
-    try:
-        data = request.get_json()
-        
-        if not data or not data.get('name') or not data.get('price') or not data.get('category'):
-            return jsonify({'error': 'Name, price, and category are required'}), 400
-        
-        cursor = connection.cursor()
-        cursor.execute(
-            "INSERT INTO menu_items (name, description, price, category) VALUES (%s, %s, %s, %s)",
-            (data['name'], data.get('description', ''), data['price'], data['category'])
-        )
-        connection.commit()
-        item_id = cursor.lastrowid
-        cursor.close()
-        connection.close()
-        
-        return jsonify({
-            'success': True,
-            'item_id': item_id,
-            'message': 'Menu item added successfully'
-        }), 201
-    
-    except mysql.connector.Error as e:
-        connection.rollback()
-        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     print("Starting Restaurant Menu API...")
     print("Available at: http://localhost:5000")
     print("Menu endpoint: http://localhost:5000/api/menu")
     app.run(debug=True, host='localhost', port=5000)
-     

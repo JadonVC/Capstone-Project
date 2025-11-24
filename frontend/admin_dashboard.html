@@ -67,11 +67,11 @@
         </div>
     </div>
 
-    <!-- Add Menu Item Modal -->
+    <!-- Add/Edit Menu Item Modal -->
     <div id="menuModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeMenuModal()">&times;</span>
-            <h2>Add Menu Item</h2>
+            <h2 id="menuModalTitle">Add Menu Item</h2>
             <form id="menuForm">
                 <div class="form-group">
                     <label for="item-name">Item Name *</label>
@@ -91,13 +91,18 @@
                         <option value="">Select Category</option>
                         <option value="Burgers">Burgers</option>
                         <option value="Pizza">Pizza</option>
+                        <option value="Wings">Wings</option>
+                        <option value="Sandwiches">Sandwiches</option>
                         <option value="Salads">Salads</option>
+                        <option value="Pasta">Pasta</option>
+                        <option value="Seafood">Seafood</option>
+                        <option value="Appetizers">Appetizers</option>
                         <option value="Desserts">Desserts</option>
                         <option value="Drinks">Drinks</option>
-                        <option value="Seafood">Seafood</option>
+                        <option value="Sides">Sides</option>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary">Add Item</button>
+                <button type="submit" class="btn btn-primary" id="menuFormBtn">Add Item</button>
             </form>
         </div>
     </div>

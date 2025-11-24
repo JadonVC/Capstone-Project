@@ -2,6 +2,7 @@
 
 const API_URL = 'http://localhost:5000';
 let statusPollingIntervals = {};
+let editingItemId = null;
 
 // Check if admin is logged in
 function checkAdminAuth() {
@@ -222,7 +223,7 @@ function displayMenuItems(items) {
     }
     
     container.innerHTML = items.map(item => `
-        <div class="menu-card">
+        <div class="menu-card" data-item-id="${item.id}">
             <div class="menu-header">
                 <h3>${item.name}</h3>
                 <span class="menu-price">$${parseFloat(item.price).toFixed(2)}</span>
@@ -238,12 +239,19 @@ function displayMenuItems(items) {
 }
 
 function showAddMenuForm() {
+    editingItemId = null;
+    document.querySelector('#menuModal h2').textContent = 'Add Menu Item';
+    document.querySelector('#menuForm button').textContent = 'Add Item';
+    document.getElementById('menuForm').reset();
     document.getElementById('menuModal').style.display = 'block';
 }
 
 function closeMenuModal() {
+    editingItemId = null;
     document.getElementById('menuModal').style.display = 'none';
     document.getElementById('menuForm').reset();
+    document.querySelector('#menuModal h2').textContent = 'Add Menu Item';
+    document.querySelector('#menuForm button').textContent = 'Add Item';
 }
 
 document.getElementById('menuForm').addEventListener('submit', async (e) => {
@@ -257,16 +265,29 @@ document.getElementById('menuForm').addEventListener('submit', async (e) => {
     };
     
     try {
-        const response = await fetch(`${API_URL}/api/menu/add`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(itemData)
-        });
+        let response;
+        
+        if (editingItemId) {
+            response = await fetch(`${API_URL}/api/menu/edit/${editingItemId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(itemData)
+            });
+        } else {
+            response = await fetch(`${API_URL}/api/menu/add`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(itemData)
+            });
+        }
         
         if (response.ok) {
-            alert('Menu item added successfully!');
+            const message = editingItemId ? 'Menu item updated successfully!' : 'Menu item added successfully!';
+            alert(message);
             closeMenuModal();
             loadAllMenuItems();
         } else {
@@ -274,17 +295,52 @@ document.getElementById('menuForm').addEventListener('submit', async (e) => {
             alert('Error: ' + error.error);
         }
     } catch (error) {
-        alert('Error adding item: ' + error.message);
+        alert('Error: ' + error.message);
     }
 });
 
 function editMenuItem(itemId) {
-    alert('Edit functionality coming soon!');
+    editingItemId = itemId;
+    const card = document.querySelector(`[data-item-id="${itemId}"]`);
+    const name = card.querySelector('.menu-header h3').textContent;
+    const price = card.querySelector('.menu-price').textContent.replace('$', '');
+    const description = card.querySelector('.menu-description').textContent;
+    const category = card.querySelector('.menu-category').textContent;
+    
+    document.querySelector('#menuModal h2').textContent = 'Edit Menu Item';
+    document.getElementById('item-name').value = name;
+    document.getElementById('item-description').value = description;
+    document.getElementById('item-price').value = price;
+    document.getElementById('item-category').value = category;
+    document.querySelector('#menuForm button').textContent = 'Update Item';
+    
+    document.getElementById('menuModal').style.display = 'block';
 }
 
 function deleteMenuItem(itemId) {
     if (confirm('Are you sure you want to delete this item?')) {
-        alert('Delete functionality coming soon!');
+        deleteMenuItemAPI(itemId);
+    }
+}
+
+async function deleteMenuItemAPI(itemId) {
+    try {
+        const response = await fetch(`${API_URL}/api/menu/delete/${itemId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        
+        if (response.ok) {
+            alert('Menu item deleted successfully!');
+            loadAllMenuItems();
+        } else {
+            const error = await response.json();
+            alert('Error: ' + error.error);
+        }
+    } catch (error) {
+        alert('Error deleting item: ' + error.message);
     }
 }
 
@@ -370,7 +426,28 @@ document.getElementById('adminForm').addEventListener('submit', async (e) => {
 
 function deleteAdmin(adminId) {
     if (confirm('Are you sure you want to remove this admin?')) {
-        alert('Delete functionality coming soon!');
+        deleteAdminAPI(adminId);
+    }
+}
+
+async function deleteAdminAPI(adminId) {
+    try {
+        const response = await fetch(`${API_URL}/api/admin/delete/${adminId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        
+        if (response.ok) {
+            alert('Admin deleted successfully!');
+            loadAllAdmins();
+        } else {
+            const error = await response.json();
+            alert('Error: ' + error.error);
+        }
+    } catch (error) {
+        alert('Error deleting admin: ' + error.message);
     }
 }
 
@@ -381,6 +458,7 @@ window.addEventListener('click', (event) => {
     
     if (event.target === menuModal) {
         menuModal.style.display = 'none';
+        editingItemId = null;
     }
     if (event.target === adminModal) {
         adminModal.style.display = 'none';

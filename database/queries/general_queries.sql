@@ -24,3 +24,7 @@
 
 -- USE restaurant_ordering;
 -- ALTER TABLE orders ADD COLUMN order_status VARCHAR(50) DEFAULT 'pending';
+
+
+SELECT * FROM admins;
+
