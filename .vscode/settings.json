@@ -16,5 +16,6 @@
       "askForPassword": true
     }
   ],
-  "liveServer.settings.root": "/frontend"
+  "liveServer.settings.root": "/frontend",
+  "liveServer.settings.port": 5501
 }
