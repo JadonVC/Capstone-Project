@@ -33,7 +33,7 @@ CREATE TABLE `admins` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
   KEY `idx_email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,7 +42,7 @@ CREATE TABLE `admins` (
 
 LOCK TABLES `admins` WRITE;
 /*!40000 ALTER TABLE `admins` DISABLE KEYS */;
-INSERT INTO `admins` VALUES (1,'jadon@gmail.com','240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9','Jadon','Admin','2025-11-16 01:49:39','2025-11-16 02:47:57');
+INSERT INTO `admins` VALUES (1,'jadon@gmail.com','240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9','Jadon','Admin','2025-11-16 01:49:39','2025-11-16 02:47:57'),(2,'alexyep345@gmail.com','816cba3be2d18fdfcc6aa7ff4b2167b597bdb52c73f431a4b82933c808b84a3c','Alex','R','2025-11-23 20:01:26','2025-11-23 20:01:26'),(3,'jenayamo@gmail.com','24920ea9bf0f0aa8e151c8883cefd1a62cbf21609ddbf95685fab4c386aed79a','Jenaya','Mo','2025-11-23 21:24:38','2025-11-23 21:24:38'),(4,'sanvik@gmail.com','24920ea9bf0f0aa8e151c8883cefd1a62cbf21609ddbf95685fab4c386aed79a','Sanvi','Karhade','2025-11-23 21:25:33','2025-11-23 21:25:33');
 /*!40000 ALTER TABLE `admins` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -61,7 +61,7 @@ CREATE TABLE `menu_items` (
   `category` varchar(100) NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -70,7 +70,7 @@ CREATE TABLE `menu_items` (
 
 LOCK TABLES `menu_items` WRITE;
 /*!40000 ALTER TABLE `menu_items` DISABLE KEYS */;
-INSERT INTO `menu_items` VALUES (1,'Classic Cheeseburger','Juicy beef patty with cheddar cheese, lettuce, tomato, and our special sauce',12.99,'burgers','2025-09-27 20:07:38'),(2,'Chicken Caesar Salad','Fresh romaine lettuce with grilled chicken, parmesan cheese, croutons, and caesar dressing',10.99,'salads','2025-09-27 20:07:38'),(3,'Margherita Pizza','Traditional pizza with tomato sauce, fresh mozzarella, basil, and olive oil',14.99,'pizza','2025-09-27 20:07:38'),(4,'Fish and Chips','Beer-battered cod with golden fries and tartar sauce',16.99,'seafood','2025-09-27 20:07:38'),(5,'Chocolate Brownie','Warm chocolate brownie served with vanilla ice cream',6.99,'desserts','2025-09-27 20:07:38'),(6,'Coca Cola','Ice-cold Coca Cola served in a chilled glass',2.99,'drinks','2025-09-27 20:07:38'),(7,'BBQ Bacon Burger','Beef patty with crispy bacon, BBQ sauce, onion rings, and cheddar cheese',15.99,'burgers','2025-09-27 20:07:38'),(8,'Greek Salad','Mixed greens with feta cheese, olives, tomatoes, cucumbers, and olive oil dressing',9.99,'salads','2025-09-27 20:07:38');
+INSERT INTO `menu_items` VALUES (1,'Classic Cheeseburger','Juicy beef patty with cheddar cheese, lettuce, tomato, and our special sauce',12.99,'burgers','2025-09-27 20:07:38'),(2,'Chicken Caesar Salad','Fresh romaine lettuce with grilled chicken, parmesan cheese, croutons, and caesar dressing',10.99,'salads','2025-09-27 20:07:38'),(3,'Margherita Pizza','Traditional pizza with tomato sauce, fresh mozzarella, basil, and olive oil',14.99,'pizza','2025-09-27 20:07:38'),(4,'Fish and Chips','Beer-battered cod with golden fries and tartar sauce',16.99,'seafood','2025-09-27 20:07:38'),(5,'Chocolate Brownie','Warm chocolate brownie served with vanilla ice cream',6.99,'desserts','2025-09-27 20:07:38'),(6,'Coca Cola','Ice-cold Coca Cola served in a chilled glass',2.99,'drinks','2025-09-27 20:07:38'),(7,'Chicken wings','8 piece fried wings',10.99,'Wings','2025-09-27 20:07:38'),(8,'Greek Salad','Mixed greens with feta cheese, olives, tomatoes, cucumbers, and olive oil dressing',9.99,'salads','2025-09-27 20:07:38'),(42,'Buffalo Wings','8 piece spicy buffalo wings',12.99,'Wings','2025-11-24 02:15:48');
 /*!40000 ALTER TABLE `menu_items` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -136,7 +136,7 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
-INSERT INTO `orders` VALUES (1,'jadon','91095235','',2.99,'2025-10-30 06:25:26',NULL,'pending'),(2,'Jadon','704 122 233','',22.97,'2025-10-30 06:46:12',NULL,'pending'),(3,'Jadon ','727 454 578','',56.95,'2025-10-30 06:57:14',NULL,'pending'),(4,'jaodn','23423','',19.97,'2025-10-31 04:15:07',NULL,'pending'),(5,'Blake','704 123423 423','',22.97,'2025-10-31 04:23:28',NULL,'pending'),(6,'jadon','235523 235','',26.97,'2025-10-31 04:51:12',NULL,'pending'),(7,'gjhj','5467','',53.94,'2025-11-01 00:11:33',NULL,'pending'),(8,'gjhj','5467','',26.97,'2025-11-01 00:18:01',NULL,'pending'),(9,'dfghdf','6346','',26.97,'2025-11-01 00:24:09',NULL,'pending'),(10,'Jadon ','2345324','',19.97,'2025-11-01 01:28:22',NULL,'pending'),(11,'Jadon ','2345324','',26.97,'2025-11-01 01:38:05',NULL,'pending'),(12,'Sanvi','485 2945','242 Charlotte Ave',49.95,'2025-11-01 01:43:35',NULL,'pending'),(13,'wefg','324','',9.98,'2025-11-01 02:17:17',NULL,'pending'),(14,'Jadon ','9109755626','',9.98,'2025-11-15 22:41:14',NULL,'pending'),(15,'awef','34534543','',9.98,'2025-11-15 23:00:31',1,'pending'),(16,'jake chan','910 435 2524','',26.97,'2025-11-21 03:24:42',2,'pending');
+INSERT INTO `orders` VALUES (1,'jadon','91095235','',2.99,'2025-10-30 06:25:26',NULL,'pending'),(2,'Jadon','704 122 233','',22.97,'2025-10-30 06:46:12',NULL,'pending'),(3,'Jadon ','727 454 578','',56.95,'2025-10-30 06:57:14',NULL,'pending'),(4,'jaodn','23423','',19.97,'2025-10-31 04:15:07',NULL,'pending'),(5,'Blake','704 123423 423','',22.97,'2025-10-31 04:23:28',NULL,'pending'),(6,'jadon','235523 235','',26.97,'2025-10-31 04:51:12',NULL,'pending'),(7,'gjhj','5467','',53.94,'2025-11-01 00:11:33',NULL,'pending'),(8,'gjhj','5467','',26.97,'2025-11-01 00:18:01',NULL,'pending'),(9,'dfghdf','6346','',26.97,'2025-11-01 00:24:09',NULL,'pending'),(10,'Jadon ','2345324','',19.97,'2025-11-01 01:28:22',NULL,'pending'),(11,'Jadon ','2345324','',26.97,'2025-11-01 01:38:05',NULL,'pending'),(12,'Sanvi','485 2945','242 Charlotte Ave',49.95,'2025-11-01 01:43:35',NULL,'pending'),(13,'wefg','324','',9.98,'2025-11-01 02:17:17',NULL,'pending'),(14,'Jadon ','9109755626','',9.98,'2025-11-15 22:41:14',NULL,'ready'),(15,'awef','34534543','',9.98,'2025-11-15 23:00:31',1,'completed'),(16,'jake chan','910 435 2524','',26.97,'2025-11-21 03:24:42',2,'preparing');
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -182,4 +182,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-23 14:05:15
+-- Dump completed on 2025-11-24 20:35:04
